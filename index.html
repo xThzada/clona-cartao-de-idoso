@@ -73,17 +73,171 @@
     const perguntas = [
       // Coloca suas 90 perguntas aqui no formato:
       {
-        pergunta: "Qual a principal função do torno mecânico?",
-        alternativas: ["Usinar peças", "Soldar metais", "Medir pressão", "Pintar superfícies"],
-        correta: 0,
-        explicacao: "A principal função do torno é usinar peças cilíndricas ou roscas."
-      },
-      {
-        pergunta: "Qual EPI é obrigatório na operação do torno?",
-        alternativas: ["Óculos de proteção", "Chinelo", "Boné", "Camisa regata"],
-        correta: 0,
-        explicacao: "Óculos de proteção evitam lesões com cavacos ou partículas."
-      },
+  pergunta: "(Módulo 1) Qual é a principal função do torno mecânico?",
+  alternativas: [
+    "Usinar peças cilíndricas",
+    "Medir pressão hidráulica",
+    "Cortar chapas metálicas",
+    "Soldar componentes"
+  ],
+  correta: 0,
+  explicacao: "O torno é usado para usinar peças cilíndricas ou roscas, girando a peça enquanto a ferramenta trabalha."
+},
+{
+  pergunta: "(Módulo 1) O que é o cabeçote do torno?",
+  alternativas: [
+    "Parte que segura a ferramenta de corte",
+    "Parte que gira a peça para usinagem",
+    "Base que sustenta o torno",
+    "Dispositivo para medir velocidade"
+  ],
+  correta: 1,
+  explicacao: "O cabeçote é a parte que gira a peça durante a operação."
+},
+{
+  pergunta: "(Módulo 1) Qual componente do torno é responsável por prender a peça a ser usinada?",
+  alternativas: [
+    "Cabeçote",
+    "Placa de fixação",
+    "Mandril",
+    "Contraponto"
+  ],
+  correta: 2,
+  explicacao: "O mandril prende a peça no cabeçote para que ela gire durante a usinagem."
+},
+{
+  pergunta: "(Módulo 1) O que é o contraponto no torno?",
+  alternativas: [
+    "Parte que gira a peça",
+    "Parte que suporta a ferramenta de corte",
+    "Parte móvel que apoia a peça no lado oposto ao mandril",
+    "Base do torno"
+  ],
+  correta: 2,
+  explicacao: "O contraponto apoia a peça do lado oposto ao mandril para maior estabilidade."
+},
+{
+  pergunta: "(Módulo 1) Qual a função do leito no torno mecânico?",
+  alternativas: [
+    "Guia que suporta os componentes móveis",
+    "Base para prender a peça",
+    "Parte que gira a peça",
+    "Dispositivo para ajustar velocidade"
+  ],
+  correta: 0,
+  explicacao: "O leito é a base que suporta os componentes móveis do torno."
+},
+{
+  pergunta: "(Módulo 1) O que é o carro porta-ferramenta?",
+  alternativas: [
+    "Dispositivo que segura e guia a ferramenta de corte",
+    "Parte que segura a peça",
+    "Base do torno",
+    "Parte que gira a peça"
+  ],
+  correta: 0,
+  explicacao: "O carro porta-ferramenta segura e guia a ferramenta durante a usinagem."
+},
+{
+  pergunta: "(Módulo 1) Como é chamada a parte do torno onde o operador controla a velocidade e movimento?",
+  alternativas: [
+    "Painel de controle",
+    "Caixa de velocidades",
+    "Mesa de trabalho",
+    "Mandril"
+  ],
+  correta: 1,
+  explicacao: "A caixa de velocidades permite ajustar a velocidade do torno."
+},
+{
+  pergunta: "(Módulo 1) Qual a principal característica do torno mecânico convencional?",
+  alternativas: [
+    "Controle digital de movimentos",
+    "Operação manual do operador",
+    "Uso exclusivo para materiais plásticos",
+    "Sistema automatizado"
+  ],
+  correta: 1,
+  explicacao: "O torno convencional é operado manualmente pelo operador."
+},
+{
+  pergunta: "(Módulo 1) O que é usinagem?",
+  alternativas: [
+    "Processo de soldagem de peças",
+    "Remoção de material para dar forma à peça",
+    "Pintura de superfícies metálicas",
+    "Montagem de componentes"
+  ],
+  correta: 1,
+  explicacao: "Usinagem é o processo de remover material para dar forma e acabamento."
+},
+{
+  pergunta: "(Módulo 1) Qual material é mais comum para peças usinadas em torno?",
+  alternativas: [
+    "Madeira",
+    "Aço e metais",
+    "Plástico reciclado",
+    "Vidro"
+  ],
+  correta: 1,
+  explicacao: "Aço e outros metais são os materiais mais comuns para usinagem em torno."
+},
+{
+  pergunta: "(Módulo 1) O que é o avanço no torno mecânico?",
+  alternativas: [
+    "Velocidade de rotação da peça",
+    "Movimento da ferramenta sobre a peça",
+    "Força aplicada na peça",
+    "Temperatura da ferramenta"
+  ],
+  correta: 1,
+  explicacao: "O avanço é o movimento da ferramenta em contato com a peça para remover material."
+},
+{
+  pergunta: "(Módulo 1) Qual o risco de operar um torno sem proteção adequada?",
+  alternativas: [
+    "Queimar a peça",
+    "Lesões causadas por cavacos e partes móveis",
+    "Perder a peça",
+    "Ficar com o torno sujo"
+  ],
+  correta: 1,
+  explicacao: "Sem proteção, cavacos e partes móveis podem causar acidentes graves."
+},
+{
+  pergunta: "(Módulo 1) Por que é importante o operador conhecer as partes do torno?",
+  alternativas: [
+    "Para montar a peça",
+    "Para operar e manter o equipamento com segurança",
+    "Para decorar o manual",
+    "Para pintar o torno"
+  ],
+  correta: 1,
+  explicacao: "Conhecer as partes ajuda na operação segura e correta do torno."
+},
+{
+  pergunta: "(Módulo 1) Qual é a função do volante no torno mecânico?",
+  alternativas: [
+    "Ajustar o avanço manualmente",
+    "Prender a peça",
+    "Regular a velocidade de rotação",
+    "Medir o diâmetro da peça"
+  ],
+  correta: 0,
+  explicacao: "O volante permite movimentar manualmente a ferramenta para usinagem."
+},
+{
+  pergunta: "(Módulo 1) O que é a ferramenta de corte no torno?",
+  alternativas: [
+    "Peça que gira a peça",
+    "Dispositivo usado para remover material da peça",
+    "Base do torno",
+    "Sistema de segurança"
+  ],
+  correta: 1,
+  explicacao: "A ferramenta de corte é o que realmente remove material da peça."
+}
+
       // Adiciona mais perguntas aqui... até 90 no total
     ];
 
