@@ -45,10 +45,11 @@
   <h1>Simulado Torno Mecânico</h1>
   <div id="menu">
     <p>Escolha o nível:</p>
-  <button onclick="startGame(3)">Normal (27 questões)</button>
-  <button onclick="startGame(5)">Intermediário (45 questões)</button>
-  <button onclick="startGame(10)">Difícil (90 questões)</button>
-  <button onclick="startGame(15)">Maníaco (135 questões)</button>
+<button onclick="startGame(3)">Normal (27 questões)</button>
+<button onclick="startGame(5)">Intermediário (45 questões)</button>
+<button onclick="startGame(10)">Difícil (90 questões)</button>
+<button onclick="startGame(15)">Maníaco (135 questões)</button>
+<button onclick="startGame(3, true)">Sandbox</button> <!-- 👈 NOVO -->
   </div>
 
   <div id="game" class="hidden">
@@ -65,10 +66,11 @@
     <button onclick="location.reload()">Tentar de novo</button>
   </div>
 
-  <div id="victory" class="hidden">
-    <h2>Parabéns, você zerou!</h2>
-    <button onclick="location.reload()">Jogar novamente</button>
-  </div>
+<div id="victory" class="hidden">
+  <h2>GG, Amassou!</h2>
+  <p id="resultadoFinal"></p>
+  <button onclick="location.reload()">Jogar novamente</button>
+</div>
 
   <script>
     const perguntas = [
@@ -1486,49 +1488,83 @@
       // Adiciona mais perguntas aqui... até 90 no total
     ];
 
+let sandbox = false;
+
     let perguntasSelecionadas = [];
-    let perguntaAtual = 0;
+let perguntaAtual = 0;
+let acertos = 0;
+let erros = 0;
+let modoSandbox = false;
 
-    function embaralhar(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
+function embaralhar(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+function startGame(qtdPorModulo, sandbox = false) {
+  const total = qtdPorModulo * 9;
+  perguntasSelecionadas = perguntas.slice(0, total);
+  embaralhar(perguntasSelecionadas);
+  perguntaAtual = 0;
+  acertos = 0;
+  erros = 0;
+  modoSandbox = sandbox;
+
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('game').classList.remove('hidden');
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = perguntasSelecionadas[perguntaAtual];
+  document.getElementById('progress').textContent = `Progresso: ${perguntaAtual + 1}/${perguntasSelecionadas.length}`;
+  document.getElementById('question').textContent = q.pergunta;
+  const answersBox = document.getElementById('answers');
+  answersBox.innerHTML = '';
+  q.alternativas.forEach((alt, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = alt;
+    btn.onclick = () => checkAnswer(i);
+    answersBox.appendChild(btn);
+  });
+}
+
+function checkAnswer(resposta) {
+  const q = perguntasSelecionadas[perguntaAtual];
+  if (resposta === q.correta) {
+    acertos++;
+  } else {
+    erros++;
+    if (!modoSandbox) {
+      document.getElementById('game').classList.add('hidden');
+      document.getElementById('gameover').classList.remove('hidden');
+      document.getElementById('correction').innerHTML = `Resposta correta: <strong>${q.alternativas[q.correta]}</strong><br>${q.explicacao}`;
+      return;
+    } else {
+      alert(`Errou!\nResposta correta: ${q.alternativas[q.correta]}\n${q.explicacao}`);
     }
+  }
 
-    function startGame(qtdPorModulo) {
-      const total = qtdPorModulo * 9;
-      perguntasSelecionadas = perguntas.slice(0, total);
-      embaralhar(perguntasSelecionadas);
-      perguntaAtual = 0;
-      document.getElementById('menu').classList.add('hidden');
-      document.getElementById('game').classList.remove('hidden');
-      showQuestion();
+  perguntaAtual++;
+  if (perguntaAtual >= perguntasSelecionadas.length) {
+    document.getElementById('game').classList.add('hidden');
+    document.getElementById('victory').classList.remove('hidden');
+
+    if (modoSandbox) {
+      const total = acertos + erros;
+      const pct = ((acertos / total) * 100).toFixed(1);
+      document.getElementById('resultadoFinal').innerHTML = `
+        ✅ Acertos: <strong>${acertos}</strong><br>
+        ❌ Erros: <strong>${erros}</strong><br>
+        📊 Aproveitamento: <strong>${pct}%</strong>
+      `;
+    } else {
+      document.getElementById('resultadoFinal').innerHTML = '';
     }
-
-    function showQuestion() {
-      const q = perguntasSelecionadas[perguntaAtual];
-      document.getElementById('progress').textContent = `Progresso: ${perguntaAtual + 1}/${perguntasSelecionadas.length}`;
-      document.getElementById('question').textContent = q.pergunta;
-      const answersBox = document.getElementById('answers');
-      answersBox.innerHTML = '';
-      q.alternativas.forEach((alt, i) => {
-        const btn = document.createElement('button');
-        btn.textContent = alt;
-        btn.onclick = () => checkAnswer(i);
-        answersBox.appendChild(btn);
-      });
-    }
-
-    function checkAnswer(resposta) {
-      const q = perguntasSelecionadas[perguntaAtual];
-      if (resposta === q.correta) {
-        perguntaAtual++;
-        if (perguntaAtual >= perguntasSelecionadas.length) {
-          document.getElementById('game').classList.add('hidden');
-          document.getElementById('victory').classList.remove('hidden');
-        } else {
-          showQuestion();
+  } else {
+    showQuestion();
         }
       } else {
         document.getElementById('game').classList.add('hidden');
