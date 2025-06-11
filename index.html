@@ -1526,13 +1526,21 @@ function startGame(qtdPorModulo, sandbox = false) {
 function showQuestion() {
   const q = perguntasSelecionadas[perguntaAtual];
   document.getElementById('progress').textContent = `Progresso: ${perguntaAtual + 1}/${perguntasSelecionadas.length}`;
+
   document.getElementById('question').textContent = q.pergunta;
   const answersBox = document.getElementById('answers');
   answersBox.innerHTML = '';
-  q.alternativas.forEach((alt, i) => {
+
+  // Cria array com objetos { texto: alternativa, indexOriginal: i }
+  let alternativasComIndex = q.alternativas.map((alt, i) => ({ texto: alt, indexOriginal: i }));
+  // Embaralha as alternativas
+  embaralhar(alternativasComIndex);
+
+  // Mostra os botões com alternativas embaralhadas
+  alternativasComIndex.forEach((altObj, i) => {
     const btn = document.createElement('button');
-    btn.textContent = alt;
-    btn.onclick = () => checkAnswer(i);
+    btn.textContent = altObj.texto;
+    btn.onclick = () => checkAnswer(altObj.indexOriginal); // usa o índice original pra conferir
     answersBox.appendChild(btn);
   });
 }
