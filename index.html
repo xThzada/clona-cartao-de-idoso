@@ -49,7 +49,7 @@
 <button onclick="startGame(5)">Intermediário (45 questões)</button>
 <button onclick="startGame(10)">Difícil (90 questões)</button>
 <button onclick="startGame(15)">Maníaco (135 questões)</button>
-<button onclick="startGame(3, true)">Sandbox</button> <!-- 👈 NOVO -->
+<button onclick="startGame(10, true)">Sandbox (Todas as questões sem game over)</button>
   </div>
 
   <div id="game" class="hidden">
@@ -69,6 +69,13 @@
 <div id="victory" class="hidden">
   <h2>GG, Amassou!</h2>
   <p id="resultadoFinal"></p>
+  <button onclick="location.reload()">Jogar novamente</button>
+</div>
+
+<div id="sandbox-summary" class="hidden">
+  <h2>Resumo do Modo Sandbox</h2>
+  <p id="sandbox-score"></p>
+  <div id="sandbox-list"></div>
   <button onclick="location.reload()">Jogar novamente</button>
 </div>
 
@@ -1504,16 +1511,15 @@ function embaralhar(array) {
 }
 
 function startGame(qtdPorModulo, sandbox = false) {
+  modoSandbox = sandbox;
   const total = qtdPorModulo * 9;
   perguntasSelecionadas = perguntas.slice(0, total);
   embaralhar(perguntasSelecionadas);
   perguntaAtual = 0;
-  acertos = 0;
-  erros = 0;
-  modoSandbox = sandbox;
-
+  historicoRespostas = [];
   document.getElementById('menu').classList.add('hidden');
   document.getElementById('game').classList.remove('hidden');
+  document.getElementById('sandbox-summary').classList.add('hidden');
   showQuestion();
 }
 
@@ -1533,45 +1539,65 @@ function showQuestion() {
 
 function checkAnswer(resposta) {
   const q = perguntasSelecionadas[perguntaAtual];
-  if (resposta === q.correta) {
-    acertos++;
+
+  const acertou = resposta === q.correta;
+  historicoRespostas.push({
+    pergunta: q.pergunta,
+    respondeu: q.alternativas[resposta],
+    correta: q.alternativas[q.correta],
+    explicacao: q.explicacao,
+    acertou
+  });
+
+  if (modoSandbox) {
+    perguntaAtual++;
+    if (perguntaAtual >= perguntasSelecionadas.length) {
+      document.getElementById('game').classList.add('hidden');
+      mostrarResumoSandbox();
+    } else {
+      showQuestion();
+    }
   } else {
-    erros++;
-    if (!modoSandbox) {
+    if (acertou) {
+      perguntaAtual++;
+      if (perguntaAtual >= perguntasSelecionadas.length) {
+        document.getElementById('game').classList.add('hidden');
+        document.getElementById('victory').classList.remove('hidden');
+      } else {
+        showQuestion();
+      }
+    } else {
       document.getElementById('game').classList.add('hidden');
       document.getElementById('gameover').classList.remove('hidden');
-      document.getElementById('correction').innerHTML = `Resposta correta: <strong>${q.alternativas[q.correta]}</strong><br>${q.explicacao}`;
-      return;
-    } else {
-      alert(`Errou!\nResposta correta: ${q.alternativas[q.correta]}\n${q.explicacao}`);
+      document.getElementById('correction').innerHTML =
+        `Resposta correta: <strong>${q.alternativas[q.correta]}</strong><br>${q.explicacao}`;
     }
   }
+}
+function mostrarResumoSandbox() {
+  const acertos = historicoRespostas.filter(r => r.acertou).length;
+  const total = historicoRespostas.length;
 
-  perguntaAtual++;
-  if (perguntaAtual >= perguntasSelecionadas.length) {
-    document.getElementById('game').classList.add('hidden');
-    document.getElementById('victory').classList.remove('hidden');
+  document.getElementById('sandbox-score').innerText = `Você acertou ${acertos} de ${total} perguntas.`;
 
-    if (modoSandbox) {
-      const total = acertos + erros;
-      const pct = ((acertos / total) * 100).toFixed(1);
-      document.getElementById('resultadoFinal').innerHTML = `
-        ✅ Acertos: <strong>${acertos}</strong><br>
-        ❌ Erros: <strong>${erros}</strong><br>
-        📊 Aproveitamento: <strong>${pct}%</strong>
-      `;
-    } else {
-      document.getElementById('resultadoFinal').innerHTML = '';
-    }
-  } else {
-    showQuestion();
-        }
-      } else {
-        document.getElementById('game').classList.add('hidden');
-        document.getElementById('gameover').classList.remove('hidden');
-        document.getElementById('correction').innerHTML = `Resposta correta: <strong>${q.alternativas[q.correta]}</strong><br>${q.explicacao}`;
-      }
-    }
+  const resumoDiv = document.getElementById('sandbox-list');
+  resumoDiv.innerHTML = '';
+
+  historicoRespostas.forEach((r, i) => {
+    const item = document.createElement('div');
+    item.style.marginBottom = '15px';
+    item.innerHTML = `
+      <strong>${i + 1}. ${r.pergunta}</strong><br>
+      Sua resposta: <span style="color:${r.acertou ? 'lightgreen' : 'red'}">${r.respondeu}</span><br>
+      Correta: <strong>${r.correta}</strong><br>
+      <em>${r.explicacao}</em>
+    `;
+    resumoDiv.appendChild(item);
+  });
+
+  document.getElementById('sandbox-summary').classList.remove('hidden');
+}
+
   </script>
 </body>
 </html>
